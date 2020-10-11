@@ -30,3 +30,106 @@
 2. 函数还会获得它所在作用域的作用域链，是存储函数能够访问的所有执行期上下文的集合，即这个函数能够访问到的东西都是沿着作用域向上查找直到全作用域
 3. 函数每次执行时对应的执行期上下文都是独一无二的，当函数执行完毕，函数都会失去对这个作用域链的引用，JS的垃圾回收机制是采用引用计数策略，如果一块内存不再被引用了那么这块内存就会被释放。
 4. 但是，当闭包存在时，即内部函数保留了对外部变量的引用时，这个作用域链就不会被销毁，此时内部函数依旧可以访问其所在的外部函数的变量，这就是闭包。
+
+* 闭包的应用
+> 使用立即执行函数解决闭包
+
+```
+for (var i = 0; i < 5; i++) {
+    ;
+    (function (i) {
+        setTimeout(function timer() {
+            console.log(i)
+        }, i * 100)
+    })(i)
+}
+```
+```
+function test() {
+    var arr = [];
+    for (i = 0; i < 10; i++) {
+        (function (j) {
+            arr[j] = function () {
+                console.log(j);
+            }
+        })(i)
+    }
+    return arr;
+}
+
+var myArr = test();
+for (j = 0; j < 10; j++) {
+    myArr[j]();
+}
+```
+
+* 闭包封装私有变量
+
+```
+function Counter() {
+   let count = 0;
+   this.plus = function () {
+      return ++count;
+   }
+   this.minus = function () {
+      return --count;
+   }
+   this.getCount = function () {
+      return count;
+   }
+}
+
+const counter = new Counter();
+counter.puls();
+counter.puls();
+console.log(counter.getCount())
+```
+# 3. 作用域与变量声明提升
+1. 在JavaScript中，函数的声明与变量的声明会被JavaScript引擎隐式地提升到当前作用域的顶部
+2. 声明语句中的赋值部分并不会被提升，只有名称被提升
+3. 函数声明的优先级高于变量，如果变量名和函数名相同且未赋值，则函数声明会覆盖变量声明
+4. 如果函数有多个同名参数，那么最后一个参数(即使没有定义)会覆盖前面的同名参数
+
+# 4. 构造函数 new时发生了什么
+
+```
+var obj = {};
+obj._proto_ = Base.prototype;
+Base.call(obj);
+```
+1. 创建一个新的对象obj
+2. 将这个空对象的proto成员指向了Base函数对象prototype成员对象
+3. Base函数对象的this指针替换成obj，相当于执行了Base.call(obj)
+4. 如果构造函数显示的返回一个对象，那么则这个实例为这个返回的对象。否则返回这个新创建的对象
+
+# 5. 函数参数是对象会发生什么问题？
+> 例子
+```
+function test(person) {
+    person.age = 21
+    person = {
+        name: '李四',
+        age: 30
+    }
+
+    return person
+}
+
+const p1 = {
+    name: '张三',
+    age: 25
+}
+
+const p2 = test(p1)
+
+console.log(p1) //{ name: '张三', age: 21 }
+console.log(p2) //{ name: 'yuki', age: 30 }
+```
+person = {} 这一步操作就将应用与原来的分离了
+
+# 6. JavaScript中，调用函数有哪几种方式
+1. 方法调用模式 Foo.foo(arg1, arg2)
+2. 函数调用模式 foo(arg1, arg2)
+3. 构造器调用模式 (new Foo())(arg1, arg2)
+4. call/apply 调用模式 Foo.foo.call(that, arg1, arg2)
+5. bind调用模式 Foo.foo.bind(that)(arg1, arg2)()
