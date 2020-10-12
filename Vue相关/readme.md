@@ -514,3 +514,193 @@ vue.js 是采用**数据劫持**结合**发布者-订阅者**的方式，通过O
 data.message 还未替换。在**mounted**阶段，vue实例挂载完成，data.message 成功渲染。
 3. 更新前/后：当data变化时，会触发**beforeUpdate** 和 **updated** 方法。
 4. 销毁前/后：在执行**destroy**方法后，对data 的改变不会再触发周期函数，说明此时 vue实例 已经解除了事件监听以及和dom的绑定，但是dom结构依然存在
+
+# 16. Vue组件之间的传值
+## 16.1 父组件与子组件之间的传值
+```
+//父组件通过标签上面定义传值
+<template>
+    <Main :obj="data"></Main>
+</template>
+<script>
+    //引入子组件
+    import Main form "./main"
+
+    exprot default{
+        name:"parent",
+        data(){
+            return {
+                data:"我要向子组件传递数据"
+            }
+        },
+        //初始化组件
+        components:{
+            Main
+        }
+    }
+</script>
+
+
+//子组件通过props方法接受数据
+<template>
+    <div></div>
+</template>
+<script>
+    exprot default{
+        name:"son",
+        //接受父组件传值
+        props:["data"]
+    }
+</script>
+```
+
+## 16.2 子组件向父组件传递数据
+```
+//子组件通过$emit方法传递参数
+<template>
+   <div v-on:click="events"></div>
+</template>
+<script>
+    //引入子组件
+    import Main form "./main"
+
+    exprot default{
+        methods:{
+            events:function(){
+
+            }
+        }
+    }
+</script>
+
+
+//
+
+<template>
+    <div></div>
+</template>
+<script>
+    exprot default{
+        name:"son",
+        //接受父组件传值
+        props:["data"]
+    }
+</script>
+```
+
+# 17. Vue路由相关问题
+
+## 17.1 active-class 是哪个组件的属性
+vue-router 模块的 router-link 组件
+
+## 17.2 嵌套路由怎么定义
+>
+在实际项目中我们会碰到多层嵌套的组件组合而成，但是我们如何实现嵌套路由呢？因此我们需要在 VueRouter 的参数中使用 children 配置，这样就可以很好的实现路由嵌套。 index.html，只有一个路由出口
+>
+
+```
+<div id="app">
+    <!-- router-view 路由出口, 路由匹配到的组件将渲染在这里 -->
+    <router-view></router-view>
+</div>
+```
+
+main.js,路由的重定向，在页面一加载的时候，就会将home组件显示出来，因为重定向指向了home组件，redirect的指向与path的必须一致。
+children里是子路由，当然子路由里还可以继续嵌套子路由
+```
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+//引入两个组件
+
+import home from "./home.vue"
+import game from "./game.vue"
+//定义路由
+const routes = [
+    { path: "/", redirect: "/home" },//重定向,指向了home组件
+    {
+        path: "/home", component: home,
+        children: [
+            { path: "/home/game", component: game }
+        ]
+    }
+]
+//创建路由实例
+const router = new VueRouter({routes})
+
+new Vue({
+    el: '#app',
+    data: {
+    },
+    methods: {
+    },
+    router
+})
+```
+ ## 17.3 路由之间的跳转
+ * 声明式(标签跳转) <router-link :to = "index">
+ * 编程式(js跳转) router.push('index')
+
+ ## 17.4 路由的懒加载
+ >
+ webpack中提供了 require.ensure() 来实现按需加载。引入路由的方式由import改为const定义的方式引入
+ > 
+
+ ## 17.5 vue-router 有哪几种导航钩子
+ 1. 全局导航钩子
+ 2. 组件内导航钩子
+ 3. 单独路由独享组件
+
+ # 18. Vuex 相关问题
+
+ ## 18.1 vuex是什么 怎么使用 哪种场景使用
+ >
+ vue 框架中的状态管理。在main.js 引入 store，注入。新建一个目录store，export 。场景有：单页应用中，组件之间的状态。音乐播放、登录状态、加入购物车
+ >
+
+ ```
+ // 新建 store.js
+import vue from 'vue'
+import vuex form 'vuex'
+vue.use(vuex)
+export default new vuex.store({
+    //...code
+})
+
+//main.js
+import store from './store'
+...
+ ```
+
+ ## 18.2 vuex 有哪几种属性
+ 有 5 种，分别是 state、getter、mutation、action、module
+
+ ## 18.3 vuex 的 store 特性是什么
+ * vuex 就是一个仓库，仓库里放了很多对象。其中 state 就是数据源存放地，对应于一般 vue 对象里面的 data
+ * state 里面 存放的数据是 响应式的，vue 组件 从 store 读取数据，若 store 中的数据发生改变，依赖这些数据的组件也会发生更新
+ * 它通过 mapState 把全局的 state 和 getter 映射到当前组件的 computed 计算属性
+
+ ## 18.4 vuex 的 getter 特性是什么
+* getter 可以对 state 进行计算操作，它就是 store 的计算属性
+* 虽然在组件内也可以做计算属性，但是 getters 可以在多给件之间复用
+* 如果一个状态只在一个组件内使用，是可以不用 getters
+
+## 18.5 vuex 的 mutation 特性是什么
+* action 类似于 muation, 不同在于：action 提交的是 mutation,而不是直接变更状态
+* action 可以包含任意异步操作
+
+## 18.6  vue 中 ajax 请求代码应该写在组件的 methods 中还是 vuex 的 action 中
+如果请求来的数据不是要被其他组件公用，仅仅在请求的组件内使用，就不需要放入 vuex 的 state 里
+如果被其他地方复用，请将请求放入 action 里，方便复用，并包装成 promise 返回
+
+## 18.7 不用 vuex 会带来什么问题
+* 可维护性会下降，你要修改数据，你得维护 3 个地方
+* 可读性下降，因为一个组件里的数据，你根本就看不出来是从哪里来的
+* 增加耦合，大量的上传派发，会让耦合性大大的增加，本来 Vue 用 Component 就是为了减少耦合，现在这么用，和组件化的初衷相背
+
+## 18.8 vuex 原理
+vuex 仅仅是作为 vue 的一个插件而存在，不像 Redux,MobX 等库可以应用于所有框架，vuex 只能使用在 vue 上，很大的程度是因为其高度依赖于 vue 的 computed 依赖检测系统以及其插件系统，
+vuex 整体思想诞生于 flux,可其的实现方式完完全全的使用了 vue 自身的响应式设计，依赖监听、依赖收集都属于 vue 对对象 Property set get 方法的代理劫持。最后一句话结束 vuex 工作原理，vuex 中的 store 本质就是没有 template 的隐藏着的 vue 组件。
+
+## 18.9 扩展问题
