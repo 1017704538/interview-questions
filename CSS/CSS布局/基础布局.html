@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .layout {
+        margin-top: 10px;
+    }
+
+    .layout div {
+        min-height: 100px;
+    }
+</style>
+
+<body>
+    <!--1.浮动的方式来实现布局-->
+    <section class="layout float">
+        <style>
+            .layout.float .left {
+                float: left;
+                width: 300px;
+                background-color: #48adff;
+            }
+
+            .layout.float .main {
+                background-color: #ff4344;
+            }
+        </style>
+        <article class="left-main">
+            <div class="left"></div>
+            <div class="main">
+                <h1>浮动两栏布局</h1>
+                <p>两栏布局的中间部分</p>
+                <p>两栏布局的中间部分</p>
+            </div>
+        </article>
+    </section>
+
+    <!--2.定位的方式来实现布局-->
+    <section class="layout absolute">
+        <style>
+            .layout.absolute .left-main {
+                width: 100%;
+            }
+
+            .layout.absolute .left {
+                left: 0;
+                width: 300px;
+                background-color: #48adff;
+                position: absolute;
+            }
+
+            .layout.absolute .main {
+                /*默认是以正常文档流的方式来展现的*/
+                background-color: #ff4344;
+                margin-left: 300px;
+                right: 0;
+            }
+        </style>
+        <article class="left-main">
+            <div class="left"></div>
+            <div class="main">
+                <h1>绝对定位两栏布局</h1>
+                <p>两栏布局的中间部分</p>
+                <p>两栏布局的中间部分</p>
+            </div>
+        </article>
+    </section>
+
+    <!--3.flex布局的实现-->
+    <section class="layout flex">
+        <style>
+            .layout .left-main {
+                display: flex;
+            }
+
+            .layout .left {
+                width: 300px;
+                background-color: #48adff;
+            }
+
+            .layout .main {
+                flex: 1;
+                background-color: #ff4344;
+            }
+        </style>
+        <article class="left-main">
+            <div class="left"></div>
+            <div class="main">
+                <h1>flex两栏布局</h1>
+                <p>两栏布局的中间部分</p>
+                <p>两栏布局的中间部分</p>
+            </div>
+        </article>
+    </section>
+
+    <!--4.table布局的实现-->
+    <section class="layout table">
+        <style>
+            .layout .left-main {
+                display: table;
+                width: 100%;
+            }
+
+            .layout .left {
+                display: table-cell;
+                width: 300px;
+                background-color: #48adff;
+            }
+
+            .layout .main {
+                background-color: #ff255f;
+            }
+        </style>
+        <article class="left-main">
+            <div class="left"></div>
+            <div class="main">
+                <h1>table两栏布局</h1>
+                <p>两栏布局的中间部分</p>
+                <p>两栏布局的中间部分</p>
+            </div>
+        </article>
+    </section>
+
+    <!--5.grid布局-->
+    <section class="layout grid">
+        <style>
+            .layout.grid .left-main {
+                display: grid;
+            }
+
+            .layout.grid .left-main {
+                grid-template-rows: 100px;
+                /*按照顺序指定盒子的宽度*/
+                grid-template-columns: 300px auto;
+            }
+
+            .layout.grid .left {
+                background-color: #48adff;
+            }
+
+            .layout.grid .main {
+                background-color: #ff4344;
+            }
+        </style>
+        <article class="left-main">
+            <div class="left"></div>
+            <div class="main">
+                <h1>grid两栏布局</h1>
+                <p>两栏布局的中间部分</p>
+                <p>两栏布局的中间部分</p>
+            </div>
+        </article>
+    </section>
+</body>
+
+</html>

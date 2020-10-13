@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    li:first-child {
+        height: 20px;
+        width: 100px;
+        background-color: #139aff;
+    }
+
+    li:last-child {
+        height: 60px;
+        width: 100px;
+        background-color: #89ff56;
+        line-height: 60px;
+    }
+
+    p:first-of-type {
+        background-color: red;
+    }
+
+    p:last-of-type {
+        background-color: deeppink;
+    }
+
+
+    /*每个p标签之前新增一个Hello文本*/
+    .container p::before {
+        content: 'Hello';
+    }
+
+    .container p::after {
+        content: 'Thanks';
+    }
+
+    .container p::first-letter {
+        font-size: 32px;
+    }
+
+    .container p::first-line {
+        background-color: #f1ffad;
+    }
+
+    /*所有选中的元素会变色*/
+    .container p::selection {
+        background-color: #1025ff;
+        color: red;
+    }
+</style>
+
+<body>
+    <ul>
+        <li>111</li>
+        <li>222</li>
+        <li>333</li>
+        <li>444</li>
+        <li>555</li>
+    </ul>
+    <div>
+        <h1>h1文本</h1>
+        <p>p文本1</p>
+        <p>p文本2</p>
+        <p>p文本3</p>
+        <p>p文本4</p>
+    </div>
+
+    <div class="container">
+        <p> css1 </p>
+        <p> css2 </p>
+        <p> css3 </p>
+        <p>我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素,我在学伪元素</p>
+    </div>
+</body>
+
+</html>
